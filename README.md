@@ -18,7 +18,15 @@
 ## 1. PHÂN TÍCH LẦN CHẠY ĐẦU TIÊN (LẦN 1)
 
 ### 1.1. Bài A - Integer Sort
-
+### 1.1. Bài A - Sắp xếp mảng số nguyên cơ bản (Integer Sort)
+- **Đặc điểm bài toán:** Yêu cầu sắp xếp một dãy gồm N số nguyên. 
+- **Thuật toán cài đặt tốt nhất ở lần 1:** Thuật toán Quick Sort phiên bản Đệ quy kết hợp kỹ thuật Median-of-Three và Insertion Sort.
+- **Các phương thức tối ưu hóa:**
+  - Tối ưu hóa việc chọn pivot : Lấy trung vị của 3 phần tử (Đầu, Giữa, Cuối) để làm chốt. Kỹ thuật này giúp thuật toán né được trường hợp xấu nhất O(N^2) khi đối mặt với các test case mảng đã được sắp xếp sẵn hoặc sắp xếp giảm dần.
+  - Kỹ thuật Ngưỡng giới hạn : Thiết lập một ngưỡng an toàn (`right - left <= 15`). Khi mảng được chẻ nhỏ xuống dưới 15 phần tử, thuật toán tự động dừng gọi đệ quy và chuyển sang dùng Insertion Sort. Với các mảng nhỏ, Insertion Sort vượt trội hơn hẳn Quick Sort do hằng số tính toán cực kỳ thấp.
+  - Fast I/O: Sử dụng `ios::sync_with_stdio(false);` và `cin.tie(nullptr);` để mở khóa tốc độ đọc/ghi dữ liệu tối đa của C++.
+- **Lý giải lựa chọn thuật toán:**
+  - Về việc chọn Quick Sort Đệ quy kết hợp Threshold: Bản code này ưu tiên sự cân bằng giữa tính dễ đọc và hiệu năng. Thay vì để cây đệ quy đâm rễ quá sâu gây tốn bộ nhớ Stack, thuật toán đã chủ động cắt tỉa toàn bộ các nhánh lá (những mảng con có kích thước <= 15). Việc kết hợp giữa khả năng phân hoạch mảng lớn xuất sắc của Quick Sort và tốc độ "vét đáy" nhanh gọn của Insertion Sort tạo ra một phiên bản lai ổn định, giúp giữ vững thời gian chạy thực tế ở mức O(N log N).
 ### 1.2. Bài B - Lexicographic Sort
 
 ### 1.3. Bài C - Length-aware Lexicographic String Sort 
