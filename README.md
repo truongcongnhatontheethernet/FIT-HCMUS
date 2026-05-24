@@ -18,7 +18,6 @@
 ## 1. PHÂN TÍCH LẦN CHẠY ĐẦU TIÊN (LẦN 1)
 
 ### 1.1. Bài A - Integer Sort
-### 1.1. Bài A - Sắp xếp mảng số nguyên cơ bản (Integer Sort)
 - **Đặc điểm bài toán:** Yêu cầu sắp xếp một dãy gồm N số nguyên. 
 - **Thuật toán cài đặt tốt nhất ở lần 1:** Thuật toán Quick Sort phiên bản Đệ quy kết hợp kỹ thuật Median-of-Three và Insertion Sort.
 - **Các phương thức tối ưu hóa:**
