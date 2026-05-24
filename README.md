@@ -17,13 +17,24 @@
 
 ## 1. PHÂN TÍCH LẦN CHẠY ĐẦU TIÊN (LẦN 1)
 
-### 1.1. Thuật toán và phương thức tối ưu hóa
-- **Thuật toán cài đặt tốt nhất:** [Tên thuật toán, ví dụ: Merge Sort, Dijkstra...]
-- **Các phương thức tối ưu hóa liên quan:** - [Liệt kê phương thức 1, ví dụ: Sử dụng mảng phụ thay vì cấp phát động liên tục]
-  - [Liệt kê phương thức 2]
+### 1.1. Bài A - Integer Sort
 
-### 1.2. Lý giải sự lựa chọn
-[Giải thích chi tiết tại sao phương pháp này lại mang lại kết quả tốt nhất trong TẤT CẢ các cách bạn đã thử cài đặt ở lần 1. Có thể đề cập đến độ phức tạp thời gian/không gian (Time/Space Complexity), hoặc cách nó xử lý tốt dữ liệu đầu vào cụ thể.]
+### 1.2. Bài B - Lexicographic Sort
+
+### 1.3. Bài C - Length-aware Lexicographic String Sort 
+- **Đặc điểm bài toán:** Ưu tiên sắp xếp theo độ dài chuỗi trước, nếu độ dài bằng nhau mới xét thứ tự từ điển. Giới hạn  (1s, 256 MB).
+- **Thuật toán cài đặt tốt nhất ở lần 1:**
+  - Bài C sử dụng thuật toán Randomized QuickSort, sử dụng hàm rand() để tiến hành chọn pivot 1 cách ngẫu nhiên, theo mặt xác suất toán học gần như loại bỏ hoàn toàn rơi vào trường hợp tệ nhất.
+  - Ngoài sử dụng thuật toán Randomize QuickSort, code sử dụng thêm 1 số phương pháp tối ưu khác:
+    + Tối ưu hoán vị: Đổi địa chỉ con trỏ (chi phí O(1)) thay vì sao chép từng ký tự của chuỗi (chi phí O(L)).
+    + Kỹ thuật Thoát sớm: Hàm so sánh trả về kết quả ngay khi thấy độ dài chuỗi khác nhau, không cần duyệt tiếp các ký tự.
+    + Fast I/O: Sử dụng ios_base::sync_with_stdio(false); và cin.tie(NULL); để tăng tốc độ đọc/ghi dữ liệu tối đa.
+  
+  
+
+- **Các phương thức tối ưu hóa:**
+  - [Ví dụ: Tối ưu hóa Custom Comparator (So sánh kích thước `a.length() < b.length()` trước, chỉ khi bằng nhau mới dùng toán tử `<` cho chuỗi).]
+- **Lý giải sự lựa chọn:** [Giải thích cách Custom Comparator hoạt động. Ví dụ: "Thuật toán này chỉ đánh giá các ký tự bên trong khi hai chuỗi có cùng độ dài, giúp cắt giảm đáng kể số lần gọi hàm so sánh chuỗi tốn kém, từ đó đáp ứng được Time Limit 1s."]
 
 ---
 
