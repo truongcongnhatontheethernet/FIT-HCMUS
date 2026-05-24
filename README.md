@@ -23,7 +23,7 @@
 
 ### 1.3. Bài C - Length-aware Lexicographic String Sort 
 - **Đặc điểm bài toán:** Ưu tiên sắp xếp theo độ dài chuỗi trước, nếu độ dài bằng nhau mới xét thứ tự từ điển. Giới hạn  (1s, 256 MB).
-- **Thuật toán cài đặt tốt nhất ở lần 1:**Bài C sử dụng thuật toán Randomized QuickSort kết hợp sử dụng mảng con trỏ.
+- **Thuật toán cài đặt tốt nhất ở lần 1:** Bài C sử dụng thuật toán Randomized QuickSort kết hợp sử dụng mảng con trỏ.
 - **Các phương thức tối ưu hóa:**
   - Tối ưu hoá việc chọn pivot: Sử dụng hàm rand() để tiến hành chọn pivot 1 cách ngẫu nhiên, theo mặt xác suất toán học gần như loại bỏ hoàn toàn rơi vào trường hợp tệ nhất.
   - Tối ưu hoán vị: Đổi địa chỉ con trỏ (chi phí O(1)) thay vì sao chép từng ký tự của chuỗi (chi phí O(L)).
