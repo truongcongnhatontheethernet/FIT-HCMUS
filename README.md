@@ -52,7 +52,15 @@
 ## 2. CÁCH THỨC SINH TEST CASE (`test_gen.cpp`)
 
 ### 2.1. Cấu trúc và logic sinh test case
-[Mô tả cách bạn viết mã trong `test_gen.cpp` để tạo ra dữ liệu. Ví dụ: Dữ liệu được sinh ngẫu nhiên hay có quy luật? Mảng giảm dần, đồ thị dầy đặc (dense graph), v.v.]
+Mã trong test_gen.cpp được thiết kế để sinh dữ liệu bao phủ cả các trường hợp tổng quát (average cases) lẫn
+các trường hợp đặc biệt (edge/worst cases). Các test case được tạo dựa trên 5 kịch bản logic chính:
+- **Ngẫu nhiên hoàn toàn:** Các phần tử được sinh ngẫu nhiên tự do trên toàn bộ miền giá trị để kiểm tra tính đúng đắn tổng quát.
+- **Ngẫu nhiên có giới hạn (Độ đa dạng thấp):** Dữ liệu được xáo trộn ngẫu nhiên nhưng chỉ cấu thành từ một tập hợp rất
+  nhỏ các ký tự hoặc chữ số (ví dụ: mảng chỉ gồm các số 0 và 1).
+- **Trùng lặp hoàn toàn:** Toàn bộ dữ liệu được sinh ra đều có cùng một giá trị giống hệt nhau.
+- **Sắp xếp ngược (Worst-case):** Dữ liệu được tạo theo quy luật sắp xếp hoàn toàn theo thứ tự
+  ngược lại (ví dụ: mảng giảm dần nghiêm ngặt) để đánh giá hiệu suất của thuật toán.
+- **Đột biến nhỏ::** Các phần tử hoặc chuỗi gần như giống hệt nhau nhưng cố tình chèn thêm các sai khác nhỏ ở một vài ký tự hoặc chữ số bất kỳ.
 
 ### 2.2. Thuật toán mục tiêu
 - **Các thuật toán mục tiêu:** [Liệt kê các thuật toán mà bộ test này nhắm tới để làm tăng thời gian chạy, ví dụ: QuickSort với pivot cố định, thuật toán ngây thơ (Naive) có độ phức tạp O(N^2)...]
