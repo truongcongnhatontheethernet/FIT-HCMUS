@@ -63,7 +63,20 @@ các trường hợp đặc biệt (edge/worst cases). Các test case được t
 - **Đột biến nhỏ::** Các phần tử hoặc chuỗi gần như giống hệt nhau nhưng cố tình chèn thêm các sai khác nhỏ ở một vài ký tự hoặc chữ số bất kỳ.
 
 ### 2.2. Thuật toán mục tiêu
-- **Các thuật toán mục tiêu:** [Liệt kê các thuật toán mà bộ test này nhắm tới để làm tăng thời gian chạy, ví dụ: QuickSort với pivot cố định, thuật toán ngây thơ (Naive) có độ phức tạp O(N^2)...]
+- **Các thuật toán mục tiêu:** 
+
+  - QuickSort (Pivot cố định ở đầu/cuối):** Bị nhắm đến bởi test case *Sắp xếp ngược* và *Trùng lặp hoàn toàn*. Việc chọn pivot kém khiến mảng
+  phân hoạch mất cân bằng, đẩy độ phức tạp từ $O(n \log n)$ xuống $O(n^2)$ và dễ gây tràn bộ nhớ stack.
+  - QuickSort (Phân hoạch cơ bản):** Bị nhắm đến bởi test case *Trùng lặp hoàn toàn* và *Ngẫu nhiên có giới hạn*. Thuật toán thực hiện nhiều phép hoán
+  vị và đệ quy dư thừa khi gặp các phần tử bằng nhau, làm giảm nghiêm trọng hiệu suất.
+  - Các thuật toán ngây thơ (Bubble Sort, Insertion Sort):** Bị nhắm đến bởi test case *Sắp xếp ngược*. Mảng tạo ra số lượng cặp nghịch thế tối đa,
+  buộc thuật toán thực hiện lượng phép hoán vị lớn nhất, phơi bày rõ giới hạn của độ phức tạp $O(n^2)$.
+  - Thuật toán sắp xếp chuỗi/dữ liệu phức tạp:** Bị nhắm đến bởi test case *Đột biến nhỏ*. Chi phí so sánh (Cost of Comparison) tăng vọt do
+  thuật toán lãng phí thời gian duyệt qua các đoạn dữ liệu trùng lặp dài trước khi tìm thấy sự khác biệt ở các ký tự cuối.
+
+
+
+
 
 ### 2.3. Lý giải việc chọn thuật toán và tác dụng của Test
 - **Lý do chọn thuật toán mục tiêu:** [Tại sao lại nhắm vào thuật toán này? (Ví dụ: Thuật toán này có điểm yếu dễ bị khai thác ở Worst-case).]
