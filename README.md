@@ -52,34 +52,37 @@
 ## 2. CÁCH THỨC SINH TEST CASE (`test_gen.cpp`)
 
 ### 2.1. Cấu trúc và logic sinh test case
-Mã trong test_gen.cpp được thiết kế để sinh dữ liệu bao phủ cả các trường hợp tổng quát (average cases) lẫn
-các trường hợp đặc biệt (edge/worst cases). Các test case được tạo dựa trên 5 kịch bản logic chính:
+Mã trong test_gen.cpp được thiết kế để sinh dữ liệu bao phủ cả các trường hợp tổng quát (average cases) lẫn các trường hợp đặc biệt (edge/worst cases). Các test case được tạo dựa trên 5 kịch bản logic chính:
 
-**Logic sinh test case cho bài B - Lexicographic Sort**: 
+**Logic sinh test case cho bài B - Lexicographic Sort:**
   - **Test001.in - Trùng lặp hoàn toàn:** Toàn bộ dữ liệu được sinh ra đều có cùng một giá trị giống hệt nhau.
-  - **Test002.in - Đột biến nhỏ:** Các phần tử hoặc chuỗi gần như giống hệt nhau có các sai khác nhỏ ở duy nhất một ký tự hoặc chữ số ở cuối.
-  - **Test003.in - Sắp xếp ngược (Worst-case):** Dữ liệu được tạo theo quy luật sắp xếp hoàn toàn theo thứ tự ngược lại (ví dụ: mảng giảm dần nghiêm ngặt).
-  - **Test004.in - Ngẫu nhiên có giới hạn (Độ đa dạng thấp):** Dữ liệu được xáo trộn ngẫu nhiên nhưng chỉ cấu thành từ một tập hợp 
-    chỉ có 2 ký tự, mảng chỉ gồm các ký tự a và b.
+  - **Test002.in - Đột biến nhỏ:** Các phần tử hoặc chuỗi gần như giống hệt nhau có các sai khác nhỏ ở duy nhất một ký tự ở cuối.
+  - **Test003.in - Sắp xếp ngược (Worst-case):** Dữ liệu được tạo theo quy luật sắp xếp hoàn toàn theo thứ tự ngược lại, mảng giảm dần nghiêm ngặt.
+  - **Test004.in - Ngẫu nhiên có giới hạn (Độ đa dạng thấp):** Dữ liệu được xáo trộn ngẫu nhiên nhưng chỉ cấu thành từ một tập hợp chỉ có 2 ký tự, mảng chỉ gồm các ký tự a và b.
   - **Test005.in - Ngẫu nhiên hoàn toàn:** Các phần tử được sinh ngẫu nhiên tự do trên toàn bộ miền giá trị, từ ký tự 'a' đến 'z' để kiểm tra tính đúng đắn tổng quát.
 
 ### 2.2. Thuật toán mục tiêu
-**Các thuật toán mục tiêu:** 
+**Các thuật toán mục tiêu mà bộ test này nhắm tới để đánh giá và thử thách hiệu năng bao gồm:**
+  - **QuickSort cơ bản** (sử dụng phân hoạch Lomuto hoặc Hoare với pivot cố định).
+  - **Radix Sort (MSD)** hoặc các thuật toán/hàm so sánh chuỗi ký tự theo cấu trúc từ điển.
+  - **Các thuật toán sắp xếp ngây thơ có độ phức tạp $O(N^2)$** (Insertion Sort, Bubble Sort).
+  - **Các thuật toán tối ưu chuẩn hóa** (MergeSort, HeapSort, Introsort) dùng làm mốc so sánh.
 
-  - **Test001.in - Trùng lặp hoàn toàn:** Toàn bộ dữ liệu được sinh ra đều có cùng một giá trị giống hệt nhau.
-    * *Thuật toán bị ảnh hưởng:* QuickSort cơ bản (Lomuto/Hoare) bị phân hoạch lệch đầu mút, thoái hóa hiệu năng từ $O(N \log N)$ xuống $O(N^2)$ và dễ gây tràn bộ nhớ stack. Xử lý bằng cách sử dụng 3-way partitioning.
-  - **Test002.in - Đột biến nhỏ:** Các phần tử hoặc chuỗi gần như giống hệt nhau có các sai khác nhỏ ở duy nhất một ký tự hoặc chữ số ở cuối.
-    * *Thuật toán bị ảnh hưởng:* Radix Sort (MSD) hoặc các hàm so sánh chuỗi. Chi phí so sánh tăng lên $O(L)$ vì phải duyệt đến tận ký tự cuối cùng mới xác định được thứ tự.
-  - **Test003.in - Sắp xếp ngược (Worst-case):** Dữ liệu được tạo theo quy luật sắp xếp hoàn toàn theo thứ tự ngược lại (ví dụ: mảng giảm dần nghiêm ngặt).
-    * *Thuật toán bị ảnh hưởng:* Insertion Sort, Bubble Sort (đạt tối đa số phép hoán vị $O(N^2)$) và QuickSort chọn pivot cố định (bị phân hoạch mất cân bằng).
-  - **Test004.in - Ngẫu nhiên có giới hạn (Độ đa dạng thấp):** Dữ liệu được xáo trộn ngẫu nhiên nhưng chỉ cấu thành từ một tập hợp chỉ có 2 ký tự, mảng chỉ gồm các ký tự a và b.
-    * *Thuật toán bị ảnh hưởng:* QuickSort không tối ưu phần tử trùng lặp. Tần suất trùng lặp cực lớn tạo ra các phân hoạch mất cân bằng nghiêm trọng, đẩy thời gian chạy tiến về $O(N^2)$.
-  - **Test005.in - Ngẫu nhiên hoàn toàn:** Các phần tử được sinh ngẫu nhiên tự do trên toàn bộ miền giá trị, từ ký tự 'a' đến 'z' để kiểm tra tính đúng đắn tổng quát.
-    * *Thuật toán bị ảnh hưởng:* Baseline test cho tất cả thuật toán để đánh giá hiệu năng ở trường hợp trung bình (Average-case). Các thuật toán tối ưu (MergeSort, HeapSort, Introsort) duy trì tốt mốc $O(N \log N)$.
-  
 ### 2.3. Lý giải việc chọn thuật toán và tác dụng của Test
-- **Lý do chọn thuật toán mục tiêu:** [Tại sao lại nhắm vào thuật toán này? (Ví dụ: Thuật toán này có điểm yếu dễ bị khai thác ở Worst-case).]
-- **Tại sao test case lại làm tăng thời gian chạy:** [Giải thích cơ chế. Ví dụ: "Vì test case cố tình tạo ra mảng đã được sắp xếp ngược, khiến cho QuickSort (chọn pivot là phần tử cuối) liên tục chia mảng thành 1 và N-1 phần tử, đẩy độ phức tạp lên O(N^2) làm tăng thời gian chạy đáng kể."]
+- **Lý do chọn thuật toán mục tiêu:** Nhắm vào các thuật toán phổ biến nhưng tồn tại các điểm yếu chí mạng trong
+  thiết kế (như cách chọn pivot cố định, cách phân hoạch khi có khóa trùng, hoặc chi phí duyệt chuỗi) nhằm kiểm tra
+  khả năng tối ưu hóa mã nguồn và tính ứng biến của thuật toán trước các dữ liệu bất lợi (Worst-case).
+
+- **Tại sao test case lại làm tăng thời gian chạy:**
+  * **Test001.in & Test004.in:** Việc dữ liệu trùng lặp hoàn toàn hoặc có độ đa dạng thấp khiến
+  QuickSort cơ bản không thể chia đều mảng. Nó liên tục phân hoạch thành hai mảng con mất cân bằng
+  nghiêm trọng (kích thước $0$ và $N-1$), đẩy độ phức tạp từ $O(N \log N)$ xuống $O(N^2)$ và dễ gây tràn bộ nhớ stack (Stack Overflow).
+  * **Test002.in:** Ép các thuật toán so sánh chuỗi hoặc Radix Sort (MSD) phải duyệt qua toàn bộ chiều dài của chuỗi (đến tận ký tự cuối cùng)
+  mới tìm ra điểm khác biệt. Chi phí cho một phép so sánh bị đẩy lên mức tối đa $O(L)$ với $L$ là độ dài chuỗi, làm chậm đáng kể tiến trình tổng thể.
+  * **Test003.in:** Tạo ra mảng giảm dần nghiêm ngặt. Đây là trạng thái tồi tệ nhất đối với Insertion Sort và Bubble Sort
+  khi buộc chúng phải thực hiện tối đa số phép hoán vị và dời chỗ ($O(N^2)$). Đồng thời, nó cũng làm phân hoạch của QuickSort (pivot đầu/cuối) bị lệch hoàn toàn.
+  * **Test005.in:** Đóng vai trò làm bài kiểm tra nền tảng (Baseline test) để xác định xem thuật toán
+  có đạt được độ phức tạp kỳ vọng trong trường hợp trung bình (Average-case) là $O(N \log N)$ hay không.
 
 ---
 
