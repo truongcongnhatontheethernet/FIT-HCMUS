@@ -47,36 +47,68 @@
 ### 2.1. Cấu trúc và logic sinh test case
 
 
-Bài A
-1.  **Test 1 :** Mảng ngẫu nhiên hoàn toàn, các giá trị được phân phối đều từ âm vô cùng (`-2147483648`) đến dương vô cùng (`2147483647`).
+**Bài A**
+1.  **Test 1 :** Mảng ngẫu nhiên hoàn toàn, các giá trị được phân phối đều từ âm vô cùng `-2147483648` đến dương vô cùng `2147483647`.
 2.  **Test 2 :** Mảng có cấu trúc tăng dần các số chẵn từ đầu đến giữa mảng, và giảm dần từ giữa về cuối mảng.
 3.  **Test 3 :** Mảng được sinh thông qua hàm đệ quy `generate_anti_merge()`, cố tình sắp xếp đan xen các phần tử chẵn/lẻ ở mọi phân đoạn để tối đa hóa số lần hoán đổi chéo.
-4.  **Test 4 :** Mảng đã được sắp xếp tăng dần tuyệt đối (từ 1 đến 100.000).
+4.  **Test 4 :** Mảng đã được sắp xếp tăng dần tuyệt đối .
 5.  **Test 5 :** Mảng chứa cực kỳ nhiều giá trị trùng lặp, chỉ xoay vòng lặp lại ngẫu nhiên đúng 3 giá trị: `INT_MIN`, `0`, và `INT_MAX`.
 
 ### 2.2. Thuật toán mục tiêu
-Bài A
+**Bài A**
 -   **Quick Sort cơ bản :** Sử dụng chốt là phần tử đầu, phần tử cuối, hoặc phần tử ở chính giữa.
--   **Quick Sort thiếu tối ưu:** Các phiên bản không có cơ chế phân hoạch 3 ngã (3-way partitioning).
+-   **Quick Sort thiếu tối ưu:** Các phiên bản không có cơ chế phân hoạch 3 ngã .
 -   **Merge Sort:** Thuật toán nổi tiếng với sự ổn định.
 -   **Heap Sort:** Thuật toán dựa trên cấu trúc cây nhị phân.
 
 ### 2.3. Lý giải việc chọn thuật toán và tác dụng của Test
 
-Bài A
--   **Tác dụng của Test 1 :** Không mang tính chất gài bẫy. Test này đóng vai trò làm thước đo chuẩn (Benchmark) để đánh giá tốc độ thực tế (Average-case) của mọi thuật toán trong điều kiện dữ liệu lý tưởng nhất.
--   **Tác dụng của Test 2 :** Đòn chí mạng nhắm vào **Quick Sort chọn chốt ở giữa (Middle-Pivot)**. Vì mảng đối xứng qua trục giữa, chốt giữa liên tục rơi vào các giá trị cực đại lớn nhất. Điều này khiến Quick Sort không thể chia đôi mảng đều đặn mà liên tục chẻ mảng thành các phần lệch nhau nghiêm trọng, đẩy thời gian chạy từ O(N log N) lên O(N^2).
--   **Tác dụng của Test 3 :** Nhắm vào **Merge Sort**. Dù Merge Sort rất ổn định, nhưng bằng cách phân bố các phần tử đan xen nhau một cách có tính toán, hàm `merge` ở mọi tầng đệ quy sẽ bị ép phải thực hiện số lượng phép so sánh và hoán vị chéo tối đa, vắt kiệt hằng số thời gian chạy của CPU.
--   **Tác dụng của Test 4 :** -   Hủy diệt **Quick Sort (chọn chốt đầu/cuối)**: Mảng đã sắp xếp khiến cây đệ quy của thuật toán này trở thành một danh sách liên kết thẳng đứng (chia mảng thành 0 và N-1 phần tử), gây tràn bộ nhớ Stack và đẩy độ phức tạp lên O(N^2).
-    -   Bẫy **Heap Sort**: Khi mảng đã sắp xếp tăng dần, mọi phần tử được đưa lên làm gốc của Max-Heap đều là những số nhỏ nhất. Thuật toán buộc phải thực hiện thao tác "sift-down" sàng lọc phần tử đó rơi xuống tận đáy cây, làm tiêu tốn tối đa chi phí khôi phục cấu trúc Heap.
--   **Tác dụng của Test 5 :** Nhắm vào các phiên bản **Quick Sort không có cơ chế xử lý trùng lặp**. Khi đối mặt với một mảng có quá nhiều giá trị giống hệt nhau, nếu không dùng phân hoạch 3 ngã (chia mảng thành 3 phần: `< pivot`, `= pivot`, `> pivot`), Quick Sort sẽ liên tục thực hiện các phép hoán đổi vô ích giữa các phần tử bằng nhau, dẫn đến tắc nghẽn cục bộ và làm chậm đáng kể thời gian thực thi.
+**Bài A**
+-   **Tác dụng của Test 1 :** Không mang tính chất gài bẫy. Test này đóng vai trò làm thước đo chuẩn để đánh giá tốc độ thực tế  của mọi thuật toán trong điều kiện dữ liệu lý tưởng nhất.
+-   **Tác dụng của Test 2 :** Nhắm vào các phiên bản **Quick Sort chọn chốt ở giữa** hoặc các chiến lược chọn chốt thiếu ổn định. Cấu trúc mảng tăng dần rồi giảm dần tạo ra các phân hoạch mất cân bằng đáng kể trong nhiều bước đệ quy, khiến Quick Sort khó chia mảng thành hai nửa đều nhau như trên dữ liệu ngẫu nhiên. Điều này làm số lần gọi đệ quy và chi phí phân hoạch tăng lên rõ rệt, từ đó làm suy giảm hiệu năng thực tế của thuật toán.
+-   **Tác dụng của Test 3 :** Nhắm vào **Merge Sort**. Mảng được sinh bằng hàm đệ quy `generate_anti_merge()`, chia xen kẽ các phần tử vào hai nửa con ở mọi tầng đệ quy. Cấu trúc này khiến quá trình `merge` ở mỗi mức phải thực hiện gần như tối đa số phép so sánh giữa hai mảng con, làm tăng đáng kể hằng số thời gian thực thi của Merge Sort.
+
+-   **Tác dụng của Test 4 :**
+    -   Nhắm vào **Quick Sort chọn chốt ở đầu hoặc cuối**: Với mảng đã được sắp xếp tăng dần hoàn toàn, các phiên bản Quick Sort kiểu này sẽ liên tục chia mảng thành hai phần có kích thước `0` và `N-1`, khiến cây đệ quy trở nên cực kỳ mất cân bằng và đẩy độ phức tạp lên gần `O(N^2)`.
+    -   Đồng thời tạo áp lực lên **Heap Sort**: Khi xây dựng Max-Heap từ mảng tăng dần, nhiều phần tử nhỏ nằm gần phía trên cây sẽ phải thực hiện các thao tác `sift-down` dài để khôi phục cấu trúc Heap, làm tăng chi phí thực thi thực tế.
+
+-   **Tác dụng của Test 5 :** Nhắm vào các phiên bản **Quick Sort không sử dụng phân hoạch 3 ngã **. Khi mảng chứa số lượng cực lớn các giá trị trùng lặp, thuật toán sẽ liên tục thực hiện nhiều phép so sánh và hoán đổi không cần thiết giữa các phần tử bằng nhau. Điều này làm giảm hiệu quả phân hoạch, gia tăng độ sâu đệ quy và khiến thời gian thực thi suy giảm đáng kể.
 ---
 
 ## 3. PHÂN TÍCH LẦN CHẠY THỨ HAI (LẦN 2)
 
 ### 3.1. Thuật toán và phương thức tối ưu hóa
-- **Thuật toán cài đặt tốt nhất:** [Tên thuật toán được dùng ở lần 2]
-- **Các phương thức tối ưu hóa liên quan:** - [Liệt kê các kỹ thuật tối ưu mới được áp dụng]
+**Bài A**
+
+- **Thuật toán cài đặt tốt nhất:** IntroSort tối ưu hóa thủ công .
+
+- **Các phương thức tối ưu hóa liên quan:**
+    - Chuyển từ Quick Sort thuần sang **IntroSort** để tránh trường hợp xấu `O(N^2)`.
+    - Áp dụng **Heap Sort fallback** khi độ sâu đệ quy vượt giới hạn.
+    - Sử dụng **Median-of-Three Pivot Selection** để chọn chốt ổn định hơn.
+    - Thay phân hoạch kiểu cũ bằng **Hoare Partition** nhằm giảm số phép hoán đổi.
+    - Áp dụng **Tail Recursion Optimization**: luôn đệ quy vào đoạn nhỏ hơn trước để giảm số lời gọi hàm và độ sâu stack.
+    - Tăng ngưỡng chuyển sang **Insertion Sort** từ `15` lên `24` để tối ưu cho các đoạn nhỏ.
+    - Thực hiện **Final Insertion Sort** trên toàn mảng sau khi phân hoạch gần hoàn tất nhằm tận dụng tính chất “gần được sắp xếp”.
+    - Sử dụng `inline` cho các hàm nhỏ (`swap_`, `insertion_sort`, `sift_down`) để giảm chi phí gọi hàm.
+    - Dùng `__lg(n)` thay cho `log2(n)` để tính giới hạn độ sâu nhanh hơn.
 
 ### 3.2. Cách thức tiếp tục tối ưu so với Lần 1
-[Giải thích quá trình nâng cấp. Ở lần 1 thuật toán bị nghẽn (bottleneck) ở đâu? Bạn đã làm thế nào để khắc phục nó ở lần 2? (Ví dụ: Thay vì dùng mảng 2 chiều tốn bộ nhớ, đã chuyển sang dùng danh sách kề; hoặc áp dụng Bitwise operations, thêm pragma GCC optimize...)]
+**Bài A**
+
+Ở lần chạy đầu tiên, thuật toán sử dụng Quick Sort kết hợp Insertion Sort cho các đoạn nhỏ. Dù đã dùng Median-of-Three để chọn chốt, thuật toán vẫn tồn tại một số điểm nghẽn hiệu năng:
+
+- Đệ quy trên cả hai nhánh làm tăng số lượng function call và gây áp lực lên stack.
+- Partition kiểu cũ tạo ra nhiều phép hoán đổi không cần thiết.
+- Quick Sort thuần vẫn có nguy cơ gặp trường hợp phân hoạch xấu trên các test được thiết kế đặc biệt.
+- Insertion Sort được gọi nhiều lần trên các đoạn nhỏ riêng lẻ, chưa tận dụng được tính chất “gần sorted” của toàn bộ mảng ở giai đoạn cuối.
+
+Ở lần tối ưu thứ hai, các điểm nghẽn trên được xử lý bằng cách chuyển sang mô hình IntroSort:
+
+- Khi độ sâu đệ quy vượt ngưỡng `2 * __lg(n)`, thuật toán tự động chuyển sang Heap Sort để bảo đảm độ phức tạp xấu nhất chỉ còn `O(N log N)`.
+- Tail Recursion Optimization giúp giảm mạnh số lời gọi hàm đệ quy.
+- Hoare Partition giảm số lần swap và cải thiện locality của cache CPU.
+- Final Insertion Sort được thực hiện đúng một lần ở cuối, giúp tối ưu mạnh trên các đoạn đã gần có thứ tự.
+- Các hàm nhỏ được `inline` để giảm overhead ở mức instruction-level.
+
+
