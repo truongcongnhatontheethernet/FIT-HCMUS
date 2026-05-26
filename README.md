@@ -45,15 +45,31 @@
 ## 2. CÁCH THỨC SINH TEST CASE (`test_gen.cpp`)
 
 ### 2.1. Cấu trúc và logic sinh test case
-[Mô tả cách bạn viết mã trong `test_gen.cpp` để tạo ra dữ liệu. Ví dụ: Dữ liệu được sinh ngẫu nhiên hay có quy luật? Mảng giảm dần, đồ thị dầy đặc (dense graph), v.v.]
+
+
+Bài A
+1.  **Test 1 :** Mảng ngẫu nhiên hoàn toàn, các giá trị được phân phối đều từ âm vô cùng (`-2147483648`) đến dương vô cùng (`2147483647`).
+2.  **Test 2 :** Mảng có cấu trúc tăng dần các số chẵn từ đầu đến giữa mảng, và giảm dần từ giữa về cuối mảng.
+3.  **Test 3 :** Mảng được sinh thông qua hàm đệ quy `generate_anti_merge()`, cố tình sắp xếp đan xen các phần tử chẵn/lẻ ở mọi phân đoạn để tối đa hóa số lần hoán đổi chéo.
+4.  **Test 4 :** Mảng đã được sắp xếp tăng dần tuyệt đối (từ 1 đến 100.000).
+5.  **Test 5 :** Mảng chứa cực kỳ nhiều giá trị trùng lặp, chỉ xoay vòng lặp lại ngẫu nhiên đúng 3 giá trị: `INT_MIN`, `0`, và `INT_MAX`.
 
 ### 2.2. Thuật toán mục tiêu
-- **Các thuật toán mục tiêu:** [Liệt kê các thuật toán mà bộ test này nhắm tới để làm tăng thời gian chạy, ví dụ: QuickSort với pivot cố định, thuật toán ngây thơ (Naive) có độ phức tạp O(N^2)...]
+Bài A
+-   **Quick Sort cơ bản :** Sử dụng chốt là phần tử đầu, phần tử cuối, hoặc phần tử ở chính giữa.
+-   **Quick Sort thiếu tối ưu:** Các phiên bản không có cơ chế phân hoạch 3 ngã (3-way partitioning).
+-   **Merge Sort:** Thuật toán nổi tiếng với sự ổn định.
+-   **Heap Sort:** Thuật toán dựa trên cấu trúc cây nhị phân.
 
 ### 2.3. Lý giải việc chọn thuật toán và tác dụng của Test
-- **Lý do chọn thuật toán mục tiêu:** [Tại sao lại nhắm vào thuật toán này? (Ví dụ: Thuật toán này có điểm yếu dễ bị khai thác ở Worst-case).]
-- **Tại sao test case lại làm tăng thời gian chạy:** [Giải thích cơ chế. Ví dụ: "Vì test case cố tình tạo ra mảng đã được sắp xếp ngược, khiến cho QuickSort (chọn pivot là phần tử cuối) liên tục chia mảng thành 1 và N-1 phần tử, đẩy độ phức tạp lên O(N^2) làm tăng thời gian chạy đáng kể."]
 
+Bài A
+-   **Tác dụng của Test 1 :** Không mang tính chất gài bẫy. Test này đóng vai trò làm thước đo chuẩn (Benchmark) để đánh giá tốc độ thực tế (Average-case) của mọi thuật toán trong điều kiện dữ liệu lý tưởng nhất.
+-   **Tác dụng của Test 2 :** Đòn chí mạng nhắm vào **Quick Sort chọn chốt ở giữa (Middle-Pivot)**. Vì mảng đối xứng qua trục giữa, chốt giữa liên tục rơi vào các giá trị cực đại lớn nhất. Điều này khiến Quick Sort không thể chia đôi mảng đều đặn mà liên tục chẻ mảng thành các phần lệch nhau nghiêm trọng, đẩy thời gian chạy từ O(N log N) lên O(N^2).
+-   **Tác dụng của Test 3 :** Nhắm vào **Merge Sort**. Dù Merge Sort rất ổn định, nhưng bằng cách phân bố các phần tử đan xen nhau một cách có tính toán, hàm `merge` ở mọi tầng đệ quy sẽ bị ép phải thực hiện số lượng phép so sánh và hoán vị chéo tối đa, vắt kiệt hằng số thời gian chạy của CPU.
+-   **Tác dụng của Test 4 :** -   Hủy diệt **Quick Sort (chọn chốt đầu/cuối)**: Mảng đã sắp xếp khiến cây đệ quy của thuật toán này trở thành một danh sách liên kết thẳng đứng (chia mảng thành 0 và N-1 phần tử), gây tràn bộ nhớ Stack và đẩy độ phức tạp lên O(N^2).
+    -   Bẫy **Heap Sort**: Khi mảng đã sắp xếp tăng dần, mọi phần tử được đưa lên làm gốc của Max-Heap đều là những số nhỏ nhất. Thuật toán buộc phải thực hiện thao tác "sift-down" sàng lọc phần tử đó rơi xuống tận đáy cây, làm tiêu tốn tối đa chi phí khôi phục cấu trúc Heap.
+-   **Tác dụng của Test 5 :** Nhắm vào các phiên bản **Quick Sort không có cơ chế xử lý trùng lặp**. Khi đối mặt với một mảng có quá nhiều giá trị giống hệt nhau, nếu không dùng phân hoạch 3 ngã (chia mảng thành 3 phần: `< pivot`, `= pivot`, `> pivot`), Quick Sort sẽ liên tục thực hiện các phép hoán đổi vô ích giữa các phần tử bằng nhau, dẫn đến tắc nghẽn cục bộ và làm chậm đáng kể thời gian thực thi.
 ---
 
 ## 3. PHÂN TÍCH LẦN CHẠY THỨ HAI (LẦN 2)
