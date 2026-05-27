@@ -51,6 +51,7 @@
 
 ## 2. CÁCH THỨC SINH TEST CASE (`test_gen.cpp`)
 
+### Bài A - Integer Sort
 ### 2.1. Cấu trúc và logic sinh test case
 Mã trong test_gen.cpp được thiết kế để sinh dữ liệu bao phủ cả các trường hợp tổng quát (average cases) lẫn các trường hợp đặc biệt (edge/worst cases). Các test case được tạo dựa trên 5 kịch bản logic chính:
 
