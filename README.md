@@ -18,7 +18,7 @@
 ## 1. PHÂN TÍCH LẦN CHẠY ĐẦU TIÊN (LẦN 1)
 
 ### 1.1. Bài A - Integer Sort
-- **Đặc điểm bài toán:** Yêu cầu sắp xếp một dãy gồm N số nguyên. 
+- **Đặc điểm bài toán:** Yêu cầu sắp xếp một dãy gồm N số nguyên. Giới hạn (10s,1024MB) , 1 <= N <= 1e5 , giá trị −2^31≤ x ≤ 2^31−1 .
 - **Thuật toán cài đặt tốt nhất ở lần 1:** Thuật toán Quick Sort phiên bản Đệ quy kết hợp kỹ thuật Median-of-Three và Insertion Sort.
 - **Các phương thức tối ưu hóa:**
   - Tối ưu hóa việc chọn pivot : Lấy trung vị của 3 phần tử (Đầu, Giữa, Cuối) để làm chốt. Kỹ thuật này giúp thuật toán né được trường hợp xấu nhất O(N^2) khi đối mặt với các test case mảng đã được sắp xếp sẵn hoặc sắp xếp giảm dần.
