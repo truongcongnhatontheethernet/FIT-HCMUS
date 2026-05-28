@@ -26,7 +26,7 @@
   - Kỹ thuật Ngưỡng giới hạn : Thiết lập một ngưỡng an toàn (`right - left <= 15`). Khi mảng được chẻ nhỏ xuống dưới 15 phần tử, thuật toán tự động dừng gọi đệ quy và chuyển sang dùng Insertion Sort. Với các mảng nhỏ, Insertion Sort vượt trội hơn hẳn Quick Sort do hằng số tính toán cực kỳ thấp.
   - Fast I/O: Sử dụng `ios::sync_with_stdio(false);` và `cin.tie(nullptr);` để mở khóa tốc độ đọc/ghi dữ liệu tối đa của C++.
 - **Lý giải lựa chọn thuật toán:**
-  - Về việc chọn Quick Sort Đệ quy kết hợp Threshold: Bản code này ưu tiên sự cân bằng giữa tính dễ đọc và hiệu năng. Thay vì để cây đệ quy đâm rễ quá sâu gây tốn bộ nhớ Stack, thuật toán đã chủ động cắt tỉa toàn bộ các nhánh lá (những mảng con có kích thước <= 15). Việc kết hợp giữa khả năng phân hoạch mảng lớn xuất sắc của Quick Sort và tốc độ "vét đáy" nhanh gọn của Insertion Sort tạo ra một phiên bản lai ổn định, giúp giữ vững thời gian chạy thực tế ở mức O(N log N).
+  - Bản code này cân bằng giữa hiệu năng và tính dễ đọc bằng cách kết hợp Quick Sort với Insertion Sort. Các mảng con nhỏ sẽ không tiếp tục đệ quy để tránh cây đệ quy quá sâu và giảm tốn bộ nhớ Stack. Nhờ tận dụng khả năng phân hoạch nhanh của Quick Sort và tốc độ xử lý tốt trên mảng nhỏ của Insertion Sort, thuật toán đạt hiệu năng thực tế ổn định gần $O(N \log N)$.
 ### 1.2. Bài B - Lexicographic Sort
 
 - **Đặc điểm bài toán:** Sắp xếp chuỗi đơn thuần theo thứ tự từ điển.
@@ -53,7 +53,7 @@
   - Kỹ thuật Thoát sớm: Hàm so sánh trả về kết quả ngay khi thấy độ dài chuỗi khác nhau, không cần duyệt tiếp các ký tự.
   - Fast I/O: Sử dụng ios_base::sync_with_stdio(false); và cin.tie(NULL); để tăng tốc độ đọc/ghi dữ liệu tối đa.
 - **Lý giải lựa chọn thuật toán:**
-  - Bản code này cân bằng giữa hiệu năng và tính dễ đọc bằng cách kết hợp Quick Sort với Insertion Sort. Các mảng con nhỏ sẽ không tiếp tục đệ quy để tránh cây đệ quy quá sâu và giảm tốn bộ nhớ Stack. Nhờ tận dụng khả năng phân hoạch nhanh của Quick Sort và tốc độ xử lý tốt trên mảng nhỏ của Insertion Sort, thuật toán đạt hiệu năng thực tế ổn định gần $O(N \log N)$.
+  - Về việc chọn thuật toán Randomize QuickSort: Bằng cách dùng hàm rand() để chọn một vị trí ngẫu nhiên làm chốt, bạn dựa vào xác suất toán học để chia đều mảng. Xác suất để rand() liên tục bốc trúng phần tử tệ nhất trong hàng chục ngàn lần lặp là vô cùng nhỏ (gần như bằng 0). Nhờ đó, thời gian chạy thực tế luôn được giữ ổn định ở mức $O(N \log N)$.
 
 ---
 
