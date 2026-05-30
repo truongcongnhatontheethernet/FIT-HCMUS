@@ -201,10 +201,33 @@ Các thuật toán mục tiêu mà bộ test này nhắm tới để đánh giá
 - Final Insertion Sort được thực hiện đúng một lần ở cuối, giúp tối ưu mạnh trên các đoạn đã gần có thứ tự.
 - Các hàm nhỏ được `inline` để giảm overhead ở mức instruction-level.
 
-
-
-
 ## Bài B - Lexicographic Sort
+### 3.1. Thuật toán và phương thức tối ưu hóa
+
+- **Thuật toán cài đặt tốt nhất:** Khởi tạo phân lô theo cơ số 2 ký tự đầu (MSD Radix Sort / Bucket Sort) kết hợp Quicksort không đệ quy (Iterative Quick Sort) trên mảng chỉ số và Fallback về Insertion Sort.
+- **Các phương thức tối ưu hóa liên quan:**
+    - **Sắp xếp gián tiếp (Indirect Sorting):** Sử dụng mảng chỉ số phụ `idx` để tránh chi phí deep copy và di chuyển cấu trúc `string` cồng kềnh trực tiếp trong bộ nhớ.
+    - **Phân lô dữ liệu (Bucket Sort):** Phân chia mảng thành $26 \times 26 = 676$ buckets độc lập dựa trên tiền tố 2 ký tự đầu để thu hẹp không gian phân hoạch.
+    - **Khử đệ quy (Iterative Quick Sort):** Sử dụng cấu trúc ngăn xếp mảng thủ công `stack_left` và `stack_right` thay cho call stack hệ thống nhằm kiểm soát bộ nhớ tuyệt đối.
+    - **Sử dụng `Median-of-Three` Pivot Selection** để chọn chốt ổn định hơn, giảm thiểu nguy cơ rơi vào trường hợp xấu nhất $O(N^2)$.
+    - **Ngưỡng chuyển đổi sang Insertion Sort:** Giới hạn phân đoạn kích thước nhỏ (`right - left <= 15`) để lập tức chuyển sang sắp xếp chèn, tận dụng tính chất cache locality của CPU.
+    - **Tối ưu I/O:** Sử dụng `ios::sync_with_stdio(false)` và `cin.tie(nullptr)` nhằm tăng tốc độ đọc ghi dữ liệu từ luồng chuẩn.
+
+### 3.2. Cách thức tiếp tục tối ưu so với Lần 1
+
+Ở lần chạy đầu tiên, thuật toán xử lý trực tiếp trên tập hợp chuỗi lớn, dẫn đến việc lặp lại nhiều phép so sánh không cần thiết đối với các chuỗi có chung tiền tố kéo dài. Thuật toán vẫn tồn tại một số điểm nghẽn hiệu năng:
+
+- Quicksort thuần có nguy cơ cao gặp trường hợp phân hoạch xấu trên các test được thiết kế đặc biệt.
+- Chi phí thao tác hoán đổi và xử lý trực tiếp trên các đối tượng `std::string` làm giảm tốc độ thực thi đáng kể.
+- Việc kiểm soát các bucket đứng độc lập hoặc rỗng chưa được phân luồng tối ưu, gây lãng phí chu kỳ CPU.
+- Tiền tố của các chuỗi chưa được tận dụng để cắt giảm số lần so sánh ký tự ở các bước phân hoạch sâu.
+
+Ở lần tối ưu thứ hai, các điểm nghẽn trên được xử lý triệt để bằng cách chuyển sang mô hình kết hợp MSD Radix và Khử đệ quy gián tiếp:
+
+- Việc băm trước mã định danh bucket cho 2 ký tự đầu giúp thuật toán lược bỏ hoàn toàn các phép so sánh ký tự tiền tố này trong suốt quá trình phân hoạch sau đó.
+- Áp dụng mảng gián tiếp phụ `temp_idx` để chốt vị trí tĩnh, đưa toàn bộ thao tác hoán đổi trong Quick Sort về xử lý số nguyên (`int`), triệt tiêu chi phí overhead bộ nhớ.
+- Chỉ thực hiện kích hoạt vòng lặp sắp xếp cho các phân đoạn thực sự có va chạm (`bucket_count[i] > 1`), loại bỏ hàng ngàn lần gọi hàm vô tính chất.
+- Cấu trúc vòng lặp `while` kết hợp ngăn xếp mảng thủ công giúp triệt tiêu hoàn toàn nguy cơ lỗi tràn bộ nhớ (Stack Overflow) dưới áp lực của các tập test case lớn.
 
 ## Bài C - Length-aware Lexicographic String Sort
 
