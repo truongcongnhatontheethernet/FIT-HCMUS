@@ -206,12 +206,33 @@ Các thuật toán mục tiêu mà bộ test này nhắm tới để đánh giá
 
 ## Bài B - Lexicographic Sort
 
-
-## Bài C - String Length and Lexicographic Sort
+## Bài C - Length-aware Lexicographic String Sort
 
 ### 3.1. Thuật toán và phương thức tối ưu hóa
-- **Thuật toán cài đặt tốt nhất:** [Tên thuật toán được dùng ở lần 2]
-- **Các phương thức tối ưu hóa liên quan:** - [Liệt kê các kỹ thuật tối ưu mới được áp dụng]
+
+**Thuật toán cài đặt tốt nhất:** Bucket/Counting Sort (theo chiều dài) kết hợp Iterative Quick Sort (gián tiếp) và Insertion Sort.
+
+**Các phương thức tối ưu hóa liên quan:**
+* Sử dụng **Bucket Sort / Counting Sort** ở vòng ngoài để phân nhóm chuỗi theo chiều dài với độ phức tạp `O(N)`, loại bỏ việc phải kiểm tra chiều dài khi so sánh.
+* Áp dụng **Indirect Sorting (Sắp xếp gián tiếp)** qua mảng chỉ số `idx` thay vì hoán đổi dữ liệu thật, đưa chi phí hoán vị (swap) chuỗi từ `O(L)` về `O(1)`.
+* Chuyển từ đệ quy sang **Iterative Quick Sort** bằng mảng stack thủ công (`stack_left`, `stack_right`) để loại bỏ hoàn toàn nguy cơ tràn bộ nhớ stack.
+* Áp dụng **Hybrid Sort / Fallback**: Tự động chuyển sang **Insertion Sort** khi kích thước mảng con cần phân hoạch đạt ngưỡng nhỏ (`<= 15`) để tối ưu hằng số thời gian.
+* Sử dụng mảng 1 chiều toàn cục (Global arrays) cấp phát tĩnh (`arr`, `idx`, `temp_idx`) với hằng số `MAXN` để tránh overhead của cấp phát bộ nhớ động rải rác.
+* Trích xuất độ dài chuỗi `.length()` đúng một lần trong pha nhập dữ liệu để đếm xô, không lặp lại thao tác này.
+* Tối ưu I/O cơ bản ở mức hệ thống bằng `ios::sync_with_stdio(false)` và `cin.tie(nullptr)`.
 
 ### 3.2. Cách thức tiếp tục tối ưu so với Lần 1
-[Giải thích quá trình nâng cấp. Ở lần 1 thuật toán bị nghẽn (bottleneck) ở đâu? Bạn đã làm thế nào để khắc phục nó ở lần 2? (Ví dụ: Thay vì dùng mảng 2 chiều tốn bộ nhớ, đã chuyển sang dùng danh sách kề; hoặc áp dụng Bitwise operations, thêm pragma GCC optimize...)]
+
+Ở lần chạy đầu tiên, thuật toán sử dụng Quick Sort đệ quy thuần túy trên mảng con trỏ ký tự `char**`. Thuật toán vẫn tồn tại các điểm nghẽn hiệu năng nghiêm trọng:
+
+* Hàm so sánh gọi lại `strlen()` cho cả hai chuỗi ở *mỗi* bước phân hoạch, tạo ra một bottleneck tốn kém `O(L)` lặp đi lặp lại hàng chục ngàn lần.
+* Đệ quy trên cả hai nhánh của Quick Sort làm tăng số lượng function call, gây áp lực lớn lên Call Stack và có nguy cơ Runtime Error.
+* Quick Sort phải gánh vác việc sắp xếp toàn bộ tập dữ liệu lộn xộn với các độ dài ngắn khác nhau cùng một lúc.
+* Quá trình cấp phát và giải phóng bộ nhớ thủ công (`new`, `delete`) cho từng chuỗi riêng biệt gây tốn chi phí thời gian và làm phân mảnh bộ nhớ.
+
+Ở lần tối ưu thứ hai, các điểm nghẽn trên được xử lý triệt để bằng việc thiết kế lại luồng thực thi:
+
+* Việc phân loại độ dài được tách riêng vào pha Counting Sort ban đầu. Chiều dài chuỗi chỉ được tính đúng 1 lần, triệt tiêu hoàn toàn chi phí đếm độ dài dư thừa ở các bước sau.
+* Sự cồng kềnh khi thao tác trên mảng chuỗi được giải quyết bằng việc giữ nguyên cấu trúc mảng gốc `arr` và chỉ thực hiện swap trên các số nguyên của mảng `idx`.
+* Iterative Quick Sort bằng mảng Stack kết hợp vòng lặp `while` giúp loại bỏ triệt để số lời gọi hàm đệ quy.
+* Bài toán được chia nhỏ hiệu quả: Quick Sort giờ đây chỉ thực thi giới hạn trong các nhóm chứa chuỗi có *cùng chiều dài*, kết hợp với fallback linh hoạt sang Insertion Sort cho các nhóm nhỏ.
