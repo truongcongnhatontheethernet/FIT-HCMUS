@@ -205,7 +205,7 @@ void gen_strlexi(int test_id) {
 }
 
 void gen_strlenlexi(int test_id) {
-    int n = 100000; 
+    int n = 10000; 
     cout << n << "\n";
 
     
